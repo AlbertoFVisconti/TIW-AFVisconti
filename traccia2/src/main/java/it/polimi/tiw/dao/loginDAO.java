@@ -6,15 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import it.polimi.tiw.object.User;
 
 public class loginDAO {
 	private Connection con=null;
-	public void loginDao (Connection connection) {
+	public loginDAO (Connection connection) {
 		this.con=connection;
 	}
-	public List<String> getNicknames() throws SQLException{
+	public List<User> getUsers() throws SQLException{
 		
-		List<String> nicknames=new ArrayList<String>();
+		List<User> users=new ArrayList<User>();
 		String query = "SELECT * FROM user";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
@@ -24,8 +25,8 @@ public class loginDAO {
 			result = pstatement.executeQuery();
 
 			while (result.next()) {
-				String s= result.getString("nickname");
-				nicknames.add(s);
+				User u= new User(result.getString("nickname"),result.getString("password"),result.getString("email"));
+				users.add(u);
 			}
 				
 		} 
@@ -48,8 +49,40 @@ public class loginDAO {
 				throw e2;
 			}
 		}
-		return nicknames;
+		return users;
 	}
-	
+	public int createUser(User user) throws SQLException {
+		int code = 0;
+		String query = "INSERT into user (nickname, password, email)   VALUES(?, ?, ?)";
+
+		// disable autocommit
+		con.setAutoCommit(false);
+		PreparedStatement pstatement = null;
+		try {
+			pstatement = con.prepareStatement(query);
+
+			pstatement.setString(1, user.getNick());
+			pstatement.setString(2, user.getPw());
+			pstatement.setString(3, user.getEmail());
+
+			code = pstatement.executeUpdate();
+			
+			// commit if everything is ok
+			con.commit();
+		} catch (SQLException e) {
+			// rollback if some exception occurs
+			con.rollback();
+			throw e;
+		} finally {
+			try {
+				pstatement.close();
+			} catch (SQLException e1) {
+				throw e1;
+			}
+			// enable autocommit again
+			con.setAutoCommit(true);
+		}
+		return code;
+	}
 
 }

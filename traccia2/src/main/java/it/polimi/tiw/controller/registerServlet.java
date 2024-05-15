@@ -3,14 +3,24 @@ package it.polimi.tiw.controller;
 
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.UnavailableException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import it.polimi.tiw.dao.loginDAO;
+import it.polimi.tiw.object.User;
 
 /**
  * Servlet implementation class registerServlet
@@ -18,7 +28,27 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/registerServlet")
 public class registerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	public registerServlet() {super();}
+	private Connection connection = null;
+
+	
+	public void init() throws ServletException {
+		try {
+			ServletContext context = getServletContext();
+			String driver = context.getInitParameter("dbDriver");
+			String url = context.getInitParameter("dbUrl");
+			String user = context.getInitParameter("dbUser");
+			String password = context.getInitParameter("dbPassword");
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, user, password);
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new UnavailableException("Can't load database driver");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new UnavailableException("Couldn't get db connection");
+		}
+	}
 	private Boolean checkEmail(String s) {
 		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
@@ -39,10 +69,7 @@ public class registerServlet extends HttpServlet {
 		user= request.getParameter("username");
 		email= request.getParameter("email");
 		
-		System.out.println(pw1);
-        System.out.println(pw2);
-        System.out.println(email);
-        System.out.println(user);
+		//check the input parameters 
         if(email==null||user==null||pw1==null||pw2==null) {
         	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "please fill all the filelds ");
 			return;
@@ -55,10 +82,47 @@ public class registerServlet extends HttpServlet {
         	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "the password was not repeated correctly");
         	return;
         }
-        System.out.println("account created succesfully");
-        response.sendRedirect("login.html");
+        
+        //interact with the DB 
+        User u= new User(user,pw1, email);
+        loginDAO ldao= new loginDAO(connection);
+        List<User> users = new ArrayList<User>();
+        
+        //check if the username is unique
+        try {
+        	users=ldao.getUsers();
+        }
+        catch (SQLException e) {
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue when reading from db");
+			return;
+		}
+        for(User temp: users) {
+        	if(user.equals(temp.getNick())) {
+        		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "too late :) user already taken");
+        		return;
+        	}
+        }
+        
+      //adds the user to the DB
+        try {
+        	ldao.createUser(u);
+        	response.sendRedirect("login.html");
+        }
+        catch (SQLException e) {
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue when writing to db");
+			return;
+		}
 	}
 
-
+	public void destroy() {
+		try {
+			if (connection != null) {
+				connection.close();
+			}
+		} catch (SQLException sqle) {
+		}
+	}
 }
 
