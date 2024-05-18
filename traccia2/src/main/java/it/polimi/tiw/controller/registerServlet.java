@@ -19,8 +19,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+
 import it.polimi.tiw.dao.loginDAO;
 import it.polimi.tiw.object.User;
+import it.polimi.tiw.utils.ConnectionHandler;
+import it.polimi.tiw.utils.HtmlThymeleaf;
 
 /**
  * Servlet implementation class registerServlet
@@ -29,26 +34,16 @@ import it.polimi.tiw.object.User;
 public class registerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
+	private TemplateEngine templateEngine;
 
 	
 	public void init() throws ServletException {
-		try {
-			ServletContext context = getServletContext();
-			String driver = context.getInitParameter("dbDriver");
-			String url = context.getInitParameter("dbUrl");
-			String user = context.getInitParameter("dbUser");
-			String password = context.getInitParameter("dbPassword");
-			Class.forName(driver);
-			connection = DriverManager.getConnection(url, user, password);
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new UnavailableException("Can't load database driver");
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new UnavailableException("Couldn't get db connection");
-		}
+			// create database connection 
+			connection = ConnectionHandler.getConnection(getServletContext());
+			//create template resolver for HTML file 
+			templateEngine= HtmlThymeleaf.createEngine(getServletContext());
 	}
+	
 	private Boolean checkEmail(String s) {
 		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
@@ -79,11 +74,14 @@ public class registerServlet extends HttpServlet {
 			return;
         }
         if(!pw1.equals(pw2)) {
-        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "the password was not repeated correctly");
+        	final WebContext ctx = new WebContext(request, response, getServletContext(), request.getLocale());
+    		ctx.setVariable("errorMsg", "the password was not repeated correctly");
+    		String path = "/register.html";
+    		templateEngine.process(path, ctx, response.getWriter());
         	return;
         }
         
-        //interact with the DB 
+        //interact with the DB to get the list of users 
         User u= new User(user,pw1, email);
         loginDAO ldao= new loginDAO(connection);
         List<User> users = new ArrayList<User>();
@@ -99,7 +97,10 @@ public class registerServlet extends HttpServlet {
 		}
         for(User temp: users) {
         	if(user.equals(temp.getNick())) {
-        		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "too late :) user already taken");
+            	final WebContext ctx = new WebContext(request, response, getServletContext(), request.getLocale());
+        		ctx.setVariable("errorMsg", "too late :) user already taken");
+        		String path = "/register.html";
+        		templateEngine.process(path, ctx, response.getWriter());
         		return;
         	}
         }
@@ -118,9 +119,7 @@ public class registerServlet extends HttpServlet {
 
 	public void destroy() {
 		try {
-			if (connection != null) {
-				connection.close();
-			}
+			ConnectionHandler.closeConnection(connection);
 		} catch (SQLException sqle) {
 		}
 	}

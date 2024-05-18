@@ -3,24 +3,27 @@ package it.polimi.tiw.controller;
 
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.UnavailableException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import it.polimi.it.objects.Course;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+
 import it.polimi.tiw.dao.loginDAO;
 import it.polimi.tiw.object.User;
+import it.polimi.tiw.utils.ConnectionHandler;
+import it.polimi.tiw.utils.HtmlThymeleaf;
 
 /**
  * Servlet implementation class loginServlet
@@ -29,25 +32,15 @@ import it.polimi.tiw.object.User;
 public class loginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
+	private TemplateEngine templateEngine;
 
 	public void init() throws ServletException {
-		try {
-			ServletContext context = getServletContext();
-			String driver = context.getInitParameter("dbDriver");
-			String url = context.getInitParameter("dbUrl");
-			String user = context.getInitParameter("dbUser");
-			String password = context.getInitParameter("dbPassword");
-			Class.forName(driver);
-			connection = DriverManager.getConnection(url, user, password);
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new UnavailableException("Can't load database driver");
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new UnavailableException("Couldn't get db connection");
+		// create database connection 
+		connection = ConnectionHandler.getConnection(getServletContext());
+		//create template resolver for HTML file 
+		templateEngine= HtmlThymeleaf.createEngine(getServletContext());
 		}
-	}
+
 	
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -56,13 +49,13 @@ public class loginServlet extends HttpServlet {
         String password = request.getParameter("password");
         
         
-        //check the input parameter 
+        //check if the input parameter is in a valid form
         if(username==null||password==null||username.length()==0||password.length()==0){
         	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "username and password required :) ");
 			return;
         }
         	
-         //check if the user exists
+         //check if the user exists and the pw is the correct one 
         loginDAO ldao= new loginDAO(connection);
         List<User> users = new ArrayList<User>();
         
@@ -80,16 +73,18 @@ public class loginServlet extends HttpServlet {
         		return;
         	}
         }
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "username and pw are not correct");
+        final WebContext ctx = new WebContext(request, response, getServletContext(), request.getLocale());
+		ctx.setVariable("errorMsg", "Incorrect username or password");
+		String path = "/login.html";
+		templateEngine.process(path, ctx, response.getWriter());
         
         
 	}
 	public void destroy() {
 		try {
-			if (connection != null) {
-				connection.close();
-			}
-		} catch (SQLException sqle) {
+			ConnectionHandler.closeConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
