@@ -15,13 +15,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.tiw.dao.loginDAO;
-import it.polimi.tiw.object.User;
+import it.polimi.tiw.beans.User;
 import it.polimi.tiw.utils.ConnectionHandler;
 import it.polimi.tiw.utils.HtmlThymeleaf;
 
@@ -45,8 +46,8 @@ public class loginServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 // read form fields
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String username = StringEscapeUtils.escapeJava(request.getParameter("username"));
+        String password = StringEscapeUtils.escapeJava(request.getParameter("password"));
         
         
         //check if the input parameter is in a valid form
@@ -67,9 +68,14 @@ public class loginServlet extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue when reading from db");
 			return;
 		}
+        
         for(User u: users) {
         	if(username.equals(u.getNick())&& password.equals(u.getPw())) {
-        		response.sendRedirect("homepage.html");
+        		String path;
+        		request.getSession().setAttribute("user", u);
+        		path = getServletContext().getContextPath() + "/homepage";
+        		System.out.println(path);
+    			response.sendRedirect(path);
         		return;
         	}
         }

@@ -19,11 +19,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import it.polimi.tiw.dao.loginDAO;
-import it.polimi.tiw.object.User;
+import it.polimi.tiw.beans.User;
 import it.polimi.tiw.utils.ConnectionHandler;
 import it.polimi.tiw.utils.HtmlThymeleaf;
 
@@ -59,10 +60,10 @@ public class registerServlet extends HttpServlet {
        
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String pw1,pw2,user,email;
-		pw1= request.getParameter("pw");
-		pw2= request.getParameter("rpw");
-		user= request.getParameter("username");
-		email= request.getParameter("email");
+		pw1= StringEscapeUtils.escapeJava(request.getParameter("pw"));
+		pw2= StringEscapeUtils.escapeJava(request.getParameter("rpw"));
+		user= StringEscapeUtils.escapeJava(request.getParameter("username"));
+		email= StringEscapeUtils.escapeJava(request.getParameter("email"));
 		
 		//check the input parameters 
         if(email==null||user==null||pw1==null||pw2==null) {
@@ -73,6 +74,7 @@ public class registerServlet extends HttpServlet {
         	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "please fill all the filelds with correct values");
 			return;
         }
+        //checks if the pw are repeated correctly 
         if(!pw1.equals(pw2)) {
         	final WebContext ctx = new WebContext(request, response, getServletContext(), request.getLocale());
     		ctx.setVariable("errorMsg", "the password was not repeated correctly");

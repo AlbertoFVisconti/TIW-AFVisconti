@@ -1,4 +1,4 @@
-package it.polimi.tiw.object;
+package it.polimi.tiw.beans;
 
 public class User {
 	private String nick;
