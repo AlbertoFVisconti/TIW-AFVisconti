@@ -74,7 +74,6 @@ public class loginServlet extends HttpServlet {
         		String path;
         		request.getSession().setAttribute("user", u);
         		path = getServletContext().getContextPath() + "/homepage";
-        		System.out.println(path);
     			response.sendRedirect(path);
         		return;
         	}

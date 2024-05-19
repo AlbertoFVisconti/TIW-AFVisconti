@@ -5,6 +5,12 @@
 <title>homepage</title>
 </head>
 <body>
-<h3>PAGE STILL UNDER CONSTRUCTION</h3>
+<div align="right">
+		<a th:href="@{/Logout}">Logout</a>
+	</div>
+	<h1>Welcome to the Home Page</h1>
+	<p th:text="${'Nice to see you again ' + session.user.nick}"></p>
+	
+
 </body>
 </html>
