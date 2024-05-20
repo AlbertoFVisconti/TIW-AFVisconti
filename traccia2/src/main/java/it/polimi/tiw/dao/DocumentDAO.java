@@ -93,7 +93,7 @@ public class DocumentDAO {
 		return docId;
 	}
 	
-	
+	//moves the doc with that id to the folder with the same id as the destination
 	public void moveDoc(int destination, int docId) throws SQLException{
 		String query = "UPDATE documento SET contenitore = ? WHERE documentoId = ?";
 		try (PreparedStatement pstatement = con.prepareStatement(query);) 
@@ -103,6 +103,42 @@ public class DocumentDAO {
 			pstatement.executeUpdate();
 
 		}
+	}
+	//add to the DB a document with the same param
+	public void addDoc(Document d) throws SQLException {
+		String query = "INSERT INTO documento (proprietario, nome, data, sommario, tipo,contenitore) VALUES (?,?,?,?,?,?)";
+
+		// disable autocommit
+		con.setAutoCommit(false);
+		PreparedStatement pstatement = null;
+		try {
+			pstatement = con.prepareStatement(query);
+
+			pstatement.setString(1, d.getProprietario());
+			pstatement.setString(2, d.getNome());
+			pstatement.setDate(3, new java.sql.Date(d.getDate().getTime()));
+			pstatement.setString(4, d.getSommario());
+			pstatement.setString(5, d.getTipo());
+			pstatement.setInt(6, d.getContenitore());
+
+			int code = pstatement.executeUpdate();
+			
+			// commit if everything is ok
+			con.commit();
+		} catch (SQLException e) {
+			// rollback if some exception occurs
+			con.rollback();
+			throw e;
+		} finally {
+			try {
+				pstatement.close();
+			} catch (SQLException e1) {
+				throw e1;
+			}
+			// enable autocommit again
+			con.setAutoCommit(true);
+		}
+		return;
 	}
 	
 }

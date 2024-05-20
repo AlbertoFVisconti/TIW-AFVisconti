@@ -9,6 +9,7 @@
 		<a th:href="@{/Logout}">Logout</a>
 	</div>
 	
+	<h5 th:text=" ${'your folder id is: ' + folderId}" ></h5>
 	<div th:if=" ${folders.size() > 0}">
 		<table>
 			<tbody>

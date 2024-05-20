@@ -5,12 +5,15 @@
 <title>homepage</title>
 </head>
 <body>
-<div align="right">
+	<div align="right">
 		<a th:href="@{/Logout}">Logout</a>
 	</div>
-	<h1>Welcome to the Home Page</h1>
-	<p th:text="${'Nice to see you again ' + session.user.nick}"></p>
-	
+	<div align="left">
+		<a th:href="@{/GestioneContenutiServlet}">Gestione contenuti</a>
+	</div>
+	<div th:if="${redirected}">
+		<p th:text=" ${'Stai spostando il documento ' + x +' dalla cartella ' + y + '. Scegli la cartella di destinazione'}"></p>
 
+	</div>
 </body>
 </html>

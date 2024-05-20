@@ -30,7 +30,7 @@ import it.polimi.tiw.utils.HtmlThymeleaf;
  * Servlet implementation class loginServlet
  */
 @WebServlet("/loginServlet")
-public class loginServlet extends HttpServlet {
+public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
 	private TemplateEngine templateEngine;
@@ -94,6 +94,7 @@ public class loginServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+
 
 }
 

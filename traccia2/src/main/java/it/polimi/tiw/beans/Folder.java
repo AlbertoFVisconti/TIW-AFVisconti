@@ -1,6 +1,6 @@
 package it.polimi.tiw.beans;
 
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,11 +12,11 @@ public class Folder {
 	private int contenitore;
 
 	
-	public Folder(int folderId, String proprietario, String nome, Date date, int contenitore) {
+	public Folder(int folderId, String proprietario, String nome, Date dateF, int contenitore) {
         this.folderId = folderId;
         this.proprietario = proprietario;
         this.nome = nome;
-        this.date = date;
+        this.date = dateF;
         this.contenitore = contenitore;
 
     }

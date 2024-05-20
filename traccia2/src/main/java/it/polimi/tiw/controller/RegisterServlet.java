@@ -32,7 +32,7 @@ import it.polimi.tiw.utils.HtmlThymeleaf;
  * Servlet implementation class registerServlet
  */
 @WebServlet("/registerServlet")
-public class registerServlet extends HttpServlet {
+public class RegisterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
 	private TemplateEngine templateEngine;

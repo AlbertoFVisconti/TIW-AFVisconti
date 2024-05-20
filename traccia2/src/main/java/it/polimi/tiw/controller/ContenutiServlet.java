@@ -29,13 +29,13 @@ import it.polimi.tiw.utils.HtmlThymeleaf;
  * Servlet implementation class courseDetails
  */
 @WebServlet("/contenuti")
-public class contenutiServlet extends HttpServlet {
+public class ContenutiServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
 	private TemplateEngine templateEngine;
        
 
-    public contenutiServlet() {
+    public ContenutiServlet() {
         super();
         }
     public void init() throws ServletException {
@@ -110,6 +110,7 @@ public class contenutiServlet extends HttpServlet {
 		String path = "/WEB-INF/contenuti.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		ctx.setVariable("folderId",folderId );
 		ctx.setVariable("folders",(folders==null)?  new ArrayList<Folder>() :folders );
 		ctx.setVariable("doc", (docs==null)?  new ArrayList<Document>() :docs ) ;
 		templateEngine.process(path, ctx, response.getWriter());
@@ -120,6 +121,13 @@ public class contenutiServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+	}
+	public void destroy() {
+		try {
+			ConnectionHandler.closeConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

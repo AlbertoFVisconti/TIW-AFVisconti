@@ -3,7 +3,7 @@ package it.polimi.tiw.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +32,12 @@ import it.polimi.tiw.utils.*;
  * Servlet implementation class homepageServlet
  */
 @WebServlet("/homepage")
-public class goHomePageServlet extends HttpServlet {
+public class HomePageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TemplateEngine templateEngine;
 	private Connection connection = null;
 
-    public goHomePageServlet() {
+    public HomePageServlet() {
         super();
     }
     //creates the folder tree using folder as "nodes"
@@ -80,18 +80,14 @@ public class goHomePageServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//checks if the user is logged in
 		HttpSession session = request.getSession();
 		if (session.isNew() || session.getAttribute("user") == null) {
 			response.sendRedirect("login.html");
 			return;
 		}
 		User user = (User) session.getAttribute("user");
-		// Redirect to the Home page
-				String path = "/WEB-INF/homepage.html";
-				ServletContext servletContext = getServletContext();
-				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-				templateEngine.process(path, ctx, response.getWriter());
-				//checks if the folder id has been deleted/changed					
+		//checks if the folder id has been deleted/changed					
 				boolean redirect=true;
 				Integer docid = null;
 				try {
@@ -140,6 +136,25 @@ public class goHomePageServlet extends HttpServlet {
 					else
 						printTree(uf,out, 0);
 				}
+
+				// renders part of the Home page content( not the tree= 
+				String path = "/WEB-INF/homepage.html";
+				ServletContext servletContext = getServletContext();
+				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+				ctx.setVariable("redirected", redirect);
+				if(redirect) {
+					try {
+						Document d= dDAO.Document(docid);
+						ctx.setVariable("x", d.getNome());
+						ctx.setVariable("y", fdao.Folder(d.getContenitore()).getNome());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+
+				templateEngine.process(path, ctx, response.getWriter());
 				out.println("</BODY></HTML>");
 				out.close();
 	}
@@ -149,6 +164,13 @@ public class goHomePageServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
+	}
+	public void destroy() {
+		try {
+			ConnectionHandler.closeConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 } 
