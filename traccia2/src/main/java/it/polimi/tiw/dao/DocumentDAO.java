@@ -38,7 +38,7 @@ public class DocumentDAO {
 		return subDocument;
 	}
 	//returns the id list of files visible by a user
-	public Set<Integer> accessableFolders(String username) throws SQLException{
+	public Set<Integer> accessableDocuments(String username) throws SQLException{
 		Set<Integer> available=new HashSet<Integer>();
 		String query = "SELECT * from documento where proprietario = ?";
 		try (PreparedStatement pstatement = con.prepareStatement(query);) 
@@ -72,6 +72,37 @@ public class DocumentDAO {
 			}
 		}
 		return null;
+	}
+	
+	//returns the id set of file inside a folder 
+	public Set<Integer> containedDocuments(int folderID) throws SQLException{
+		Set<Integer> docId=new HashSet<Integer>();
+		String query = "SELECT * from documento where contenitore = ?";
+		try (PreparedStatement pstatement = con.prepareStatement(query);) 
+		{
+			pstatement.setInt(1, folderID);
+			try (ResultSet result = pstatement.executeQuery();) {
+				while (result.next()) 
+				{
+					docId.add(result.getInt("documentoId"));
+				}
+			}
+		}
+		if(docId.isEmpty())
+			return null;
+		return docId;
+	}
+	
+	
+	public void moveDoc(int destination, int docId) throws SQLException{
+		String query = "UPDATE documento SET contenitore = ? WHERE documentoId = ?";
+		try (PreparedStatement pstatement = con.prepareStatement(query);) 
+		{
+			pstatement.setInt(1, destination);
+			pstatement.setInt(2, docId);
+			pstatement.executeUpdate();
+
+		}
 	}
 	
 }

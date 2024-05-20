@@ -9,7 +9,7 @@
 		<a th:href="@{/Logout}">Logout</a>
 	</div>
 	
-	<div th:if="${folders.size() >0}">
+	<div th:if=" ${folders.size() > 0}">
 		<table>
 			<tbody>
 				<tr th:each="f : ${folders}">
@@ -18,13 +18,13 @@
 			</tbody>
 		</table>
 	</div>  
-	<div th:if="${doc.size() >0}">
+	<div th:if=" ${doc.size() >0}">
 		<table>
 			<tbody>
 				<tr th:each="d : ${doc}">
 					<td th:text="${d.nome}"></td>
 					<td><a th:href="@{/documento(docid=${d.docId})}">accedi</a></td>
-					<td><a th:href="@{/GetMissionDetails(docid=${d.docId})}">sposta</a></td>
+					<td><a th:href="@{/homepage(docid=${d.docId})}">sposta</a></td>
 				</tr>
 			</tbody>
 		</table>

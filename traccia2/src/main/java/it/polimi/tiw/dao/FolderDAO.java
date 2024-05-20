@@ -16,7 +16,7 @@ public class FolderDAO {
 	public FolderDAO (Connection connection) {
 		this.con=connection;
 	}
-	
+	//subfolder of the folder with the same id 
 	public List<Folder> getSubFolder(int id) throws SQLException{
 		List<Folder> subFolder= new ArrayList<Folder>();
 		String query = "SELECT * from cartella where contenitore = ?";
@@ -36,6 +36,7 @@ public class FolderDAO {
 			return null;
 		return subFolder;
 	}
+	//first lvl folder of a user 
 	public List<Folder> getMainFolder(String username) throws SQLException{
 		List<Folder> subFolder= new ArrayList<Folder>();
 		String query = "SELECT * from cartella where proprietario = ? and contenitore=1";
@@ -55,7 +56,7 @@ public class FolderDAO {
 			return null;
 		return subFolder;
 	}
-	
+	//folder accessable by a user 
 	public Set<Integer> accessableFolders(String username) throws SQLException{
 		Set<Integer> available=new HashSet<Integer>();
 		String query = "SELECT * from cartella where proprietario = ?";

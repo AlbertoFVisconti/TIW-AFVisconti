@@ -2,16 +2,17 @@ package it.polimi.tiw.utils;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 import it.polimi.tiw.beans.Document;
 import it.polimi.tiw.beans.Folder;
 
 public class UtilFolder extends Folder{
 	private List<UtilFolder> subfolder;
-	private List<Document> documents;
+	private Set<Integer> documents;
 
 	public UtilFolder(int folderId, String proprietario, String nome, Date date, int contenitore,
-			List<UtilFolder> subfolder, List<Document> documents) {
+			List<UtilFolder> subfolder, Set<Integer> documents) {
 		super(folderId, proprietario, nome, date, contenitore);
         this.subfolder = subfolder;
         this.documents = documents;
@@ -22,10 +23,10 @@ public class UtilFolder extends Folder{
     public void setSubfolder(List<UtilFolder> subfolder) {
         this.subfolder = subfolder;
     }
-    public List<Document> getDocuments() {
+    public Set<Integer> getDocuments() {
         return documents;
     }
-    public void setDocuments(List<Document> documents) {
+    public void setDocuments(Set<Integer> documents) {
         this.documents = documents;
     }
 

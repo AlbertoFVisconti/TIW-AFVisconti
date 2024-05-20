@@ -64,7 +64,7 @@ public class DocumentoServlet extends HttpServlet {
 				
 		//checks if a malicious user tries to access others people folders
 				try {
-					if(!dDAO.accessableFolders(user.getNick()).contains(docid)) {
+					if(!dDAO.accessableDocuments(user.getNick()).contains(docid)) {
 						response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not allowed to see the content of this file");
 						return;
 					}

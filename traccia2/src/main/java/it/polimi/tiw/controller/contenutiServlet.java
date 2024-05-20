@@ -57,23 +57,34 @@ public class contenutiServlet extends HttpServlet {
 
 		//checks if the folder id has been deleted/changed
 		Integer folderId = null;
+		Integer docid =null;
 		try {
 			folderId = Integer.parseInt(request.getParameter("folderId"));
+			docid= Integer.parseInt(request.getParameter("docid"));
 		} catch (NumberFormatException | NullPointerException e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param values");
 			return;
 		}
 		FolderDAO fdao= new FolderDAO(connection);
-		
+		DocumentDAO dDAO = new DocumentDAO(connection);
 		//checks if a malicious user tries to access others people folders
 		try {
-			if(!fdao.accessableFolders(user.getNick()).contains(folderId)) {
+			if(!fdao.accessableFolders(user.getNick()).contains(folderId) || (docid!=0 && !dDAO.accessableDocuments(user.getNick()).contains(docid))) {
 				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not allowed to see the content of this file");
 				return;
 			}
 		} catch (SQLException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue when reading from db");
 			return;
+		}
+		//moves the folder if needed
+		if(docid!=0) {
+			try {
+				dDAO.moveDoc(folderId, docid);
+			} catch (SQLException e) {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue when reading from db");
+				return;
+			}
 		}
 		
 
@@ -99,8 +110,8 @@ public class contenutiServlet extends HttpServlet {
 		String path = "/WEB-INF/contenuti.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		ctx.setVariable("folders", folders );
-		ctx.setVariable("doc", docs );
+		ctx.setVariable("folders",(folders==null)?  new ArrayList<Folder>() :folders );
+		ctx.setVariable("doc", (docs==null)?  new ArrayList<Document>() :docs ) ;
 		templateEngine.process(path, ctx, response.getWriter());
 		
 	}
