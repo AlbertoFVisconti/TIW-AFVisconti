@@ -69,7 +69,7 @@ public class DocumentoServlet extends HttpServlet {
 						return;
 					}
 				} catch (SQLException e) {
-					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue when reading from db 1");
+					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue when reading from db");
 					return;
 				}
 		//gets the document info 
@@ -77,7 +77,7 @@ public class DocumentoServlet extends HttpServlet {
 				try {
 					doc = dDAO.Document(docid);
 				} catch (SQLException e) {
-					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue when reading from db 2");
+					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue when reading from db");
 					return;
 				}
 		
@@ -86,6 +86,7 @@ public class DocumentoServlet extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		ctx.setVariable("doc", doc );
+		ctx.setVariable("x", getServletContext().getContextPath());
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 

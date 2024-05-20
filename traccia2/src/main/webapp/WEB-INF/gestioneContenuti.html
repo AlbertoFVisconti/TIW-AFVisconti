@@ -5,7 +5,15 @@
 <title>Insert title here</title>
 </head>
 <body>
-<div>
+
+	<div align="right">
+		<a th:href="@{/Logout}">Logout</a>
+	</div>
+	<div align="left">
+		<a th:href="@{/homepage}">Back</a>
+	</div>
+	
+	<div>
 <form name="folderForm" method="post" action="GestioneContenutiServlet">
  	<input type="hidden" name="formName" value="folderForm">
 	<p>CREAZIONE DI UNA CARTELLA</p>

@@ -8,7 +8,7 @@
 	<div align="right">
 		<a th:href="@{/Logout}">Logout</a>
 	</div>
-	<div align="left">
+	<div th:if="${!redirected}" align="left">
 		<a th:href="@{/GestioneContenutiServlet}">Gestione contenuti</a>
 	</div>
 	<div th:if="${redirected}">
