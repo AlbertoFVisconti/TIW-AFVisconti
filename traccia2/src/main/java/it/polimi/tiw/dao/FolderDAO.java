@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import it.polimi.tiw.beans.Folder;
 
@@ -52,6 +54,24 @@ public class FolderDAO {
 		if(subFolder.isEmpty())
 			return null;
 		return subFolder;
+	}
+	
+	public Set<Integer> accessableFolders(String username) throws SQLException{
+		Set<Integer> available=new HashSet<Integer>();
+		String query = "SELECT * from cartella where proprietario = ?";
+		try (PreparedStatement pstatement = con.prepareStatement(query);) 
+		{
+			pstatement.setString(1, username);
+			try (ResultSet result = pstatement.executeQuery();) {
+				while (result.next()) 
+				{
+					available.add(result.getInt("cartellaId"));
+				}
+			}
+		}
+		if(available.isEmpty())
+			return null;
+		return available;
 	}
 		
 		

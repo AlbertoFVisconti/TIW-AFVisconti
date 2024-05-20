@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div align="right">
+		<a th:href="@{/Logout}">Logout</a>
+	</div>
+<div>
+		<p th:text=" ${'proprietario:' + doc.proprietario}"></p>
+		<p th:text=" ${'nome: ' +doc.nome}"></p>
+		<p th:text="${'data creazione: ' + doc.date}"></p>
+		<p th:text="${'sommario: ' + doc.sommario}"></p>
+		<p th:text="${'tipo: ' + doc.tipo}"></p>
+	</div>
+
+</body>
+</html>

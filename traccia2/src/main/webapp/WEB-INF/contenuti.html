@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div align="right">
+		<a th:href="@{/Logout}">Logout</a>
+	</div>
+	
+	<div th:if="${folders.size() >0}">
+		<table>
+			<tbody>
+				<tr th:each="f : ${folders}">
+					<td th:text="${f.nome}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>  
+	<div th:if="${doc.size() >0}">
+		<table>
+			<tbody>
+				<tr th:each="d : ${doc}">
+					<td th:text="${d.nome}"></td>
+					<td><a th:href="@{/documento(docid=${d.docId})}">accedi</a></td>
+					<td><a th:href="@{/GetMissionDetails(docid=${d.docId})}">sposta</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>  
+
+</body>
+</html>

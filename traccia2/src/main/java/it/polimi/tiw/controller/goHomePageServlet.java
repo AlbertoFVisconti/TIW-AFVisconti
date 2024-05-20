@@ -39,6 +39,7 @@ public class goHomePageServlet extends HttpServlet {
     public goHomePageServlet() {
         super();
     }
+    //creates the folder tree using folder as "nodes"
     private UtilFolder createTree(Folder folder, FolderDAO fdao) throws SQLException{
     	List<Folder> subFolder =fdao.getSubFolder(folder.getId());
     	if (subFolder==null) {
@@ -53,9 +54,10 @@ public class goHomePageServlet extends HttpServlet {
     			temp, null);
     }
     
+    //prints the folder tree 
     private void printTree(UtilFolder uf, PrintWriter out) {
     	
-    	out.println("<li>"+uf.getNome()+"</li>" );
+    	out.println("<li>"+"<a href="+getServletContext().getContextPath()+"/contenuti?folderId=" + uf.getId()+">"+uf.getNome()+"</a>"+"</li>" );
     	if(uf.getSubfolder()!=null&&!uf.getSubfolder().isEmpty()) {
     		out.print("<ul>");
     		for(UtilFolder suf: uf.getSubfolder()) {

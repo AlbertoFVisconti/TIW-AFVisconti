@@ -71,6 +71,7 @@ public class loginServlet extends HttpServlet {
         
         for(User u: users) {
         	if(username.equals(u.getNick())&& password.equals(u.getPw())) {
+        		//redirect to the home page 
         		String path;
         		request.getSession().setAttribute("user", u);
         		path = getServletContext().getContextPath() + "/homepage";
@@ -78,6 +79,7 @@ public class loginServlet extends HttpServlet {
         		return;
         	}
         }
+        //prints error if no match is found
         final WebContext ctx = new WebContext(request, response, getServletContext(), request.getLocale());
 		ctx.setVariable("errorMsg", "Incorrect username or password");
 		String path = "/login.html";
