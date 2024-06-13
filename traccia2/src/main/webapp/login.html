@@ -12,10 +12,24 @@
     <input type="submit" value="Login" />
     <p th:text=" ${errorMsg}" ></p>
 </form>
-
-<form action="register.html" method="POST">
-		  	<input type="submit" value="Register">
-</form>  
+<h3>REGISTER PAGE: </h3>
+<form name="registerForm"  method="post" action="registerServlet">
+		  <label for="username">username:</label>
+		  <input type="text" id="username" name="username"><br><br>
+		  
+		  <label for="mail">mail:</label>
+		  <input type="email" id="email" name="email"><br><br>
+		  
+		  <label for="password">password:</label>
+		  <input type="text" id="pw" name="pw"><br><br>
+		  
+		  <label for="password">repeat password:</label>
+		  <input type="text" id="rpw" name="rpw"><br><br>
+		  
+		  <input type="submit" value="Register">
+		  <p th:text=" ${errorMsg}"></p>
+</form>
+ 
 		  
 </body>
 </html>

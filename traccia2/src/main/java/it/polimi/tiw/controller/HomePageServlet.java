@@ -1,3 +1,5 @@
+
+
 package it.polimi.tiw.controller;
 
 import java.io.IOException;
@@ -137,7 +139,7 @@ public class HomePageServlet extends HttpServlet {
 						printTree(uf,out, 0);
 				}
 
-				// renders part of the Home page content( not the tree= 
+				// renders part of the Home page content( not the tree) 
 				String path = "/WEB-INF/homepage.html";
 				ServletContext servletContext = getServletContext();
 				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
@@ -148,8 +150,8 @@ public class HomePageServlet extends HttpServlet {
 						ctx.setVariable("x", d.getNome());
 						ctx.setVariable("y", fdao.Folder(d.getContenitore()).getNome());
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue when reading from db");
+						return;
 					}
 					
 				}

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" media="all" href="CSS/creazioneContenuti.css" />
 </head>
 <body>
 
@@ -14,18 +15,18 @@
 	</div>
 	
 	<div>
-<form name="folderForm" method="post" action="GestioneContenutiServlet">
+<form name="folderForm" class="folderForm" method="post" action="GestioneContenutiServlet">
  	<input type="hidden" name="formName" value="folderForm">
 	<p>CREAZIONE DI UNA CARTELLA</p>
     Nome: <input type="text" name="nomeF" required/> <br/>
     Data creazione: <input type="date" name="dateF" th:attr="max=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required/> <br/>
     <p>se vuoi una cartella primaria metti 1, altrimenti inserisci ID della cartella che vuoi come padre.
      Lo trovi schiacciando sulla stessa nella home page</p>
-     ID: <input type="number" name="fatherF" required/> <br/>
+     ID: <input type="number" name="fatherF" min="1" required/> <br/>
     <input type="submit" value="Crea" />
 </form></div>
 <div>
-<form name="docForm" method="post" action="GestioneContenutiServlet">
+<form name="docForm" class="docForm" method="post" action="GestioneContenutiServlet">
 	<input type="hidden" name="formName" value="docForm">
 	<p>CREAZIONE DI UN DOCUMENTO</p>
     Nome: <input type="text" name="nomeD" required/> <br/>
@@ -33,7 +34,7 @@
     Sommario: <input type="text" name="summaryD" required/> <br/>
     Tipo: <input type="text" name="typeD" required/> <br/>
     <p>Inserisci ID della cartella che vuoi come padre. Lo trovi schiacciando sulla stessa nella home page</p>
-     ID: <input type="number" name="fatherD" required/> <br/>
+     ID: <input type="number" name="fatherD" min="2" required/> <br/>
     <input type="submit" value="Crea" />
 </div>
 

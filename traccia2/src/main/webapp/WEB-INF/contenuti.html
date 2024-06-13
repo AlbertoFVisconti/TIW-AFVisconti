@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" media="all" href="CSS/style.css" />
 </head>
 <body>
 	<div align="right">
@@ -22,7 +23,7 @@
 			</tbody>
 		</table>
 	</div>  
-	<div th:if=" ${doc.size() >0}">
+	<div th:if=" ${doc.size() >0}" class="docs">
 		<table>
 			<tbody>
 				<tr th:each="d : ${doc}">
