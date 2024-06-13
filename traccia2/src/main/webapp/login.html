@@ -2,20 +2,30 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>LOGIN</title>
+<title>LOGIN PAGE</title>
+<script src="utils.js" charset="utf-8" defer></script>
+<script src="loginManagement.js" charset="utf-8" defer></script>
+<script src="registerManagement.js" charset="utf-8" defer></script>
 </head>
 <body>
-<h3>LOGIN PAGE: </h3>
-<form name="loginForm" method="post" action="loginServlet">
-    Username: <input type="text" name="username" required/> <br/>
-    Password: <input type="password" name="password" required/> <br/>
-    <input type="submit" value="Login" />
-    <p th:text=" ${errorMsg}" ></p>
-</form>
+<h1>Welcome to the mission management application</h1>
 
-<form action="register.html" method="POST">
-		  	<input type="submit" value="Register">
-</form>  
-		  
+	<form action="#">
+	<fieldset>
+		Username: <input type="text" name="username" required> <br>
+		Password: <input type="password" name="pwd" required><br>
+		<input id="loginbutton" type="button" value="login">
+		<p id="errormessage"></p>
+	</fieldset></form>
+	
+	<form action="#">
+	<fieldset>
+		Username: <input type="text" name="username" required> <br>
+		Email: <input type="email" name="email" required> <br>
+		Password: <input type="password" name="pwd" required><br>
+		Repeat password: <input type="password" name="rpwd" required><br>
+		<input id="registerbutton" type="button" value="register">
+		<p id="Rerrormessage"></p>
+	</fieldset></form>
 </body>
 </html>

@@ -127,6 +127,37 @@ public class FolderDAO {
 		}
 		return;
 	}
+	
+	//remove from the DB the folder with that folder id, so recoursevly all the others that are his children
+	public void removeFolder(int folderid) throws SQLException{
+		String query="DELETE FROM cartella WHERE cartellaId = ?";
+			// disable autocommit
+			con.setAutoCommit(false);
+			PreparedStatement pstatement = null;
+			try {
+				pstatement = con.prepareStatement(query);
+
+				pstatement.setInt(1,folderid);
+
+				int code = pstatement.executeUpdate();
+				
+				// commit if everything is ok
+				con.commit();
+			} catch (SQLException e) {
+				// rollback if some exception occurs
+				con.rollback();
+				throw e;
+			} finally {
+				try {
+					pstatement.close();
+				} catch (SQLException e1) {
+					throw e1;
+				}
+				// enable autocommit again
+				con.setAutoCommit(true);
+			}
+			return;
+	}
 		
 		
 }

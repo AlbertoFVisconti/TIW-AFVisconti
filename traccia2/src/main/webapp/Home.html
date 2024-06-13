@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Homepage</title>
+<link rel="stylesheet" type="text/css" media="all" href="CSS/style.css" />
+<script src="home.js" charset="utf-8" defer></script>
+<script src="utils.js" charset="utf-8" defer></script>
+</head>
+<body>
+<div id="id_alert" class="alertmessage"></div>	
+
+<table>
+	<tr>
+		<thead>
+			<p class="trash">Cestino</p>
+		</thead>
+	</tr>
+	<tr>
+		<td> 
+			<form id="id_mainfolderform" action="#">
+				<input type="button" value="Crea cartella" >
+			</form>
+			<table id="id_tree">your folders go here: 
+
+			<tbody id="id_treebody"></tbody></table>
+		</td>
+		<td><dl id="id_detailcontainer" class="boxed">
+			<dt>Nome:</dt>
+			<dd id="id_nome"></dd>		
+			<dt>Data:</dt>
+			<dd id="id_data"></dd>
+			<dt id="id_psommario">Sommario:</dt>		
+			<dd id="id_sommario"></dd>
+			<dt id="id_ptipo">Tipo:</dt>
+			<dd id="id_tipo"></dd>				
+		</dl>
+		</td>
+	</tr>
+	
+	<tr>
+		<td>
+		<form id="id_folderform" action="#">
+			<fieldset>
+					<p>Nome: <input type="text" name="nomeF" required /></p>
+   					<p>Data creazione: <input type="date" name="dateF" required/></p>
+   					<input type="hidden" name="folderid" > 
+   					<input type="button" value="Crea" >
+			</fieldset>
+				
+		</form>
+		</td>
+		<td>
+		<form id="id_docform" action="#">
+			<fieldset>
+				the doc creation goes here 
+				<p>Nome: <input type="text" name="nomeD" required/> </p>
+				<p>Data creazione: <input type="date" name="dateD" required/> </p>	
+   				<p>Sommario: <input type="text" name="summaryD" required/> </p>
+  				<p>Tipo: <input type="text" name="typeD" required/> </p>
+  				<input type="hidden" name="folderid" >
+				<input type="button"  value="Crea">
+			</fieldset>
+		</form>
+		</td>
+	</tr>
+</table>		
+</body>
+</html>

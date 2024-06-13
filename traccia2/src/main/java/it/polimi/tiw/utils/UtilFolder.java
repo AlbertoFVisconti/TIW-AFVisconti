@@ -9,10 +9,10 @@ import it.polimi.tiw.beans.Folder;
 
 public class UtilFolder extends Folder{
 	private List<UtilFolder> subfolder;
-	private Set<Integer> documents;
+	private List<Document> documents;
 
 	public UtilFolder(int folderId, String proprietario, String nome, Date date, int contenitore,
-			List<UtilFolder> subfolder, Set<Integer> documents) {
+			List<UtilFolder> subfolder, List<Document> documents) {
 		super(folderId, proprietario, nome, date, contenitore);
         this.subfolder = subfolder;
         this.documents = documents;
@@ -23,10 +23,10 @@ public class UtilFolder extends Folder{
     public void setSubfolder(List<UtilFolder> subfolder) {
         this.subfolder = subfolder;
     }
-    public Set<Integer> getDocuments() {
+    public List<Document> getDocuments() {
         return documents;
     }
-    public void setDocuments(Set<Integer> documents) {
+    public void setDocuments(List<Document> documents) {
         this.documents = documents;
     }
 

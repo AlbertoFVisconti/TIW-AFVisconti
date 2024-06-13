@@ -1,0 +1,14 @@
+@charset "UTF-8";
+.draggable {
+  padding: 1rem;
+  background-color:rgba(0,0,0,0);
+  cursor: move;
+}
+
+.draggable.dragging {
+	background-color: grey;
+  opacity: .25;
+}
+.trash{
+	background-color: red;
+}

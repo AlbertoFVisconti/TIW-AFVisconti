@@ -141,4 +141,35 @@ public class DocumentDAO {
 		return;
 	}
 	
+	public void removeDoc(int docid) throws SQLException{
+		String query="DELETE FROM documento WHERE documentoId = ?";
+			// disable autocommit
+				con.setAutoCommit(false);
+				PreparedStatement pstatement = null;
+				try {
+					pstatement = con.prepareStatement(query);
+
+					pstatement.setInt(1,docid);
+
+					int code = pstatement.executeUpdate();
+					
+					// commit if everything is ok
+					con.commit();
+				} catch (SQLException e) {
+					// rollback if some exception occurs
+					con.rollback();
+					throw e;
+				} finally {
+					try {
+						pstatement.close();
+					} catch (SQLException e1) {
+						throw e1;
+					}
+					// enable autocommit again
+					con.setAutoCommit(true);
+				}
+			return;
+		
+	}
+	
 }
